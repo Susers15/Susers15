@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フォント選択ページ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Lobster&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'San Francisco', 'Meiryo', sans-serif;
+            padding: 20px;
+            margin: 0;
+            font-size: 18px;
+            background-color: #f4f4f9;
+        }
+
+        .font-selector-btn {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .font-selector-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .font-list {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            z-index: 100;
+            margin-top: 10px;
+        }
+
+        .font-list button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            color: #333;
+            background-color: #fff;
+            border: none;
+            text-align: left;
+        }
+
+        .font-list button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .text {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            font-size: 18px;
+        }
+
+        .copy-button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>フォント選択ページ</h1>
+
+    <button class="font-selector-btn" id="font-selector-btn">フォントを選ぶ</button>
+
+    <div class="font-list" id="font-list">
+        <button data-font="San Francisco">San Francisco</button>
+        <button data-font="Meiryo">Meiryo</button>
+        <button data-font="Arial">Arial</button>
+        <button data-font="Times New Roman">Times New Roman</button>
+        <button data-font="Courier New">Courier New</button>
+        <button data-font="Roboto">Roboto</button>
+        <button data-font="Lobster">Lobster</button>
+    </div>
+
+    <div class="text" id="text-area">
+        このテキストは選択したフォントで表示されます。
+    </div>
+
+    <button class="copy-button" id="copy-button">テキストをコピー</button>
+
+    <script>
+        // フォント選択ボタンを押した時の動作
+        document.getElementById('font-selector-btn').addEventListener('click', function() {
+            const fontList = document.getElementById('font-list');
+            fontList.style.display = fontList.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // 各フォントを選んだときの動作
+        const fontButtons = document.querySelectorAll('.font-list button');
+        fontButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const selectedFont = button.getAttribute('data-font');
+                document.getElementById('text-area').style.fontFamily = selectedFont;
+                // フォントを選んだらリストを非表示
+                document.getElementById('font-list').style.display = 'none';
+
+                // body内のフォントを更新
+                const bodyStyle = document.querySelector('body');
+                bodyStyle.style.fontFamily = selectedFont;
+
+                // HTMLコードに表示する
+                const htmlCode = `
+                    <html lang="ja">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Webページ名(タブ名として表示)</title>
+                    </head>
+                    <body style="font-family: ${selectedFont};">
+                        <h1>Webタイトル</h1>
+                        <p>ページ内のテキスト。</p>
+                    </body>
+                    </html>
+                `;
+                // HTMLコードを表示
+                document.getElementById('text-area').innerHTML = htmlCode;
+            });
+        });
+
+        // テキストをコピーする機能
+        document.getElementById('copy-button').addEventListener('click', function() {
+            const textArea = document.getElementById('text-area');
+            const range = document.createRange();
+            range.selectNode(textArea);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+
+            try {
+                document.execCommand('copy');
+                alert('テキストがコピーされました！');
+            } catch (err) {
+                alert('コピーに失敗しました。');
+            }
+
+            // コピー後に選択解除
+            window.getSelection().removeAllRanges();
+        });
+    </script>
+
+</body>
+</html>
